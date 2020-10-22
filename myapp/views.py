@@ -1,40 +1,26 @@
 from django.shortcuts import render
+from myapp.forms import *
+from django.shortcuts import redirect
 
-funnyDB = {}
+formdict = {(14, 18): "Вы в норме, так держать!",
+            (0, 14): "Вам бы набрать вес"}
 
-# Create your views here.
-def reguser(request):
-	global funnyDB
-	context = {'funnyDB': funnyDB}
-
+def calc_ibm(request):
 	if request.method == 'POST':
-		name = request.POST.get('name', None)
-		age = int(request.POST.get('age', None))
-		height = float(request.POST.get('height', None))
-		context['name'] = name
-		context['age'] = age
-		context['height'] = height
-		context['myrange'] = range(age)
+		form = IBM_form(request.POST)
+		if form.is_valid():
+			name = form.data.get('name')
+			weight = float(form.data.get('weight'))
+			height = float(form.data.get('height'))
 
-		funnyDB[name] = {'age': age, 'height': height}
+			print(weight, height, name)
 
-		context['funnyDB'] = funnyDB
+			return redirect('index')
+	else:
+		form = IBM_form()
 
+	return render(request, 'showme.html', context={'form': form})
 
-	return render(request, 'showme.html', context=context)
-
-
-# Create your views here.
-def getuser(request):
-	global funnyDB
-
-	context = {'funnyDB': funnyDB}
-	if request.method == 'POST':
-		name = request.POST.get('name', None)
-		context['name'] = name
-		context['funnyDB'] = funnyDB
-
-	return render(request, 'showme.html', context=context)
 
 def index(request):
 	return render(request, 'index.html')
