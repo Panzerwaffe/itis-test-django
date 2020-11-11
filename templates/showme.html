@@ -1,34 +1,70 @@
 {% extends "main.html" %}
 
 {% block content %}
-    <div class="row">
-        <a href="{% url 'index' %}" class="list-group">На главную</a>
-    </div>
-    <div class="row">
-        <form action="{% url "calc_ibm" %}" method="post" class="form-group">
-            {% csrf_token %}
-            <div class="form-group">
-{#                {% for field in form %}#}
-{#                    <label for="{{ field.name }}">{{ field.label_tag }}</label>#}
-{#                    <input type="{{ field.get_internal_type }}" class="form-control green-input"#}
-{#                           name="{{ field.name }}"#}
-{#                            {% if field.value %}#}
-{#                                value="{{ field.value }}"#}
-{#                            {% endif %}>#}
-{#                    {{ field.errors }}#}
-{#                {% endfor %}#}
+    {% if imb and imb_text and imb_adwise %}
+        <p>{{ form.data.name }}, Ваш индекс тела: {{ imb }}</p>
+        <p>{{ imb_text }}</p>
+        <p>Совет: {{ imb_adwise }}</p>
+    {% endif %}
+    <form method="post" action="{% url 'calc_imb' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            {% for field in form %}
+                <div class="field_wrapper">
+                    {{ field.errors }}
+                    {{ field.label_tag }} {{ field }}
+                    {% if field.help_text %}
+                        <p class="help">{{ field.help_text|safe }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <input type="submit" class="btn-success">
+        </div>
+    </form>
 
-                {% for field in form %}
-                    <div class="field_wrapper">
-                        {{ field.errors }}
-                        {{ field.label_tag }} {{ field }}
-                        {% if field.help_text %}
-                            <p class="help">{{ field.help_text|safe }}</p>
-                        {% endif %}
-                    </div>
+    <form method="post" action="{% url 'filter_imb' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            {% for field in form_filter %}
+                <div class="field_wrapper">
+                    {{ field.errors }}
+                    {{ field.label_tag }} {{ field }}
+                    {% if field.help_text %}
+                        <p class="help">{{ field.help_text|safe }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <input type="submit" class="btn-success">
+        </div>
+    </form>
+
+    {% if histories %}
+        <div>
+        <p>История запросов</p>
+           <ul class="list-group">
+                {% for history in histories %}
+                    <li class="list-group-item">Имя: {{ history.name }} [{{ history.age }} лет], ИМТ: {{ history.imb }}
+                        <a href="{% url 'imb_update' history.id %}">Update</a> |
+                        <a href="{% url 'imb_delete' history.id %}">Delete</a>
+                    </li>
                 {% endfor %}
-                <input type="submit" class="btn-success">
-            </div>
-        </form>
-    </div>
+           </ul>
+        </div>
+    {% endif %}
+{#    <a onclick="add_comment()" class="btn btn-success">Отправить</a>#}
+     <script>
+        function add_comment() {
+            $.ajax({
+                url: "{% url "filter_imb" %}",
+                type: "POST",
+                data: {
+                    weight_from: $('#weight_from').val(),
+                    weight_to: $('#weight_to').val()
+                },
+                success: function () {
+                    $('#text').val('');
+                }
+            });
+        }
+    </script>
 {% endblock %}

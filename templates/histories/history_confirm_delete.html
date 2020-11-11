@@ -1,0 +1,12 @@
+{% extends "main.html" %}
+
+{% block content %}
+    <div class="col-lg-6 centered">
+        <h1>Удалить?</h1>
+        <form method="post">
+            {% csrf_token %}
+            Точно?
+            <input type="submit" class="btn btn-danger" value="Да"/>
+        </form>
+    </div>
+{% endblock %}

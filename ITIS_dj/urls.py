@@ -15,10 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from myapp import views
+from myapp.histories import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    path('ibm/', views.calc_ibm, name='calc_ibm'),
+    path('imb/', views.calc_imb, name='calc_imb'),
+    path('filter_imb/', views.filter_data, name='filter_imb'),
+    # path('v/update/<int:history_id>', views.imb_update, name='imb_update'),
+    path('imb/update/<int:pk>', views.IMBUpdate.as_view(), name='imb_update'),
+    path('imb/delete/<int:pk>', views.IMBDelete.as_view(), name='imb_delete'),
+
+    # path('filter_weight/', views.filter_weight, name='filter_weight'),
 ]
