@@ -2,12 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>LOOK AT ME</title>
+    <title>reddit</title>
     <link rel="stylesheet" href="/static/boot.css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container">
+        {% if request.user.is_anonymous %}
+            Нужно <a href="{% url 'login' %}">ВОЙТИ</a> !
+        {% else %}
+             Привет, {{ user }}. Если хочешь, можешь <a href="{% url 'logout' %}">Выйти</a>
+        или зайти в свой <a href="{% url 'account' %}">Кабинет</a>
+        {% endif %}
+
         {% block content %}
 
         {% endblock %}

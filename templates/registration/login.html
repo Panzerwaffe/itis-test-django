@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>login</title>
+    <link rel="stylesheet" href="/static/boot.css"/>
+    <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+    {% load widget_tweaks %}
+    <div class="container">
+        <form class="form-group col-lg-5" method="post">
+              {% csrf_token %}
+              {% for field in form %}
+                    {{ field.errors }}
+                    {% render_field field class="form-control col-lg-12" placeholder=field.label %}
+                    {% if field.help_text %}
+                        <p class="help">{{ field.help_text|safe }}</p>
+                    {% endif %}
+            {% endfor %}
+            <button class="btn btn-success" type="submit">Log in</button>
+            <a href="{% url 'signup'%}" class="btn btn-success col-lg-12 dark-input">Sign up</a>
+        </form>
+    </div>
+</body>
+</html>
